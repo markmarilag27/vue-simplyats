@@ -5,7 +5,8 @@ export default {
 
   // initial state
   state: {
-    notifications: []
+    notifications: [],
+    sidebarWidth: null
   },
 
   // getters
@@ -32,12 +33,14 @@ export default {
       )
 
       state.notifications = notifications
-    }
+    },
+    SET_SIDEBAR_WIDTH: (state, payload) => (state.sidebarWidth = payload)
   },
 
   // actions
   actions: {
     pushNotification: ({ commit }, notification) => (commit('PUSH_NOTIFICATIONS', notification)),
-    removeNotification: ({ commit }, notificationToRemove) => (commit('REMOVE_NOTIFICATION', notificationToRemove))
+    removeNotification: ({ commit }, notificationToRemove) => (commit('REMOVE_NOTIFICATION', notificationToRemove)),
+    setSidebarWidth: ({ commit }, payload) => (commit('SET_SIDEBAR_WIDTH', payload))
   }
 }
