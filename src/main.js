@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import { validateXsrfToken, validateAuthUserToken } from './services/auth'
 import './assets/tailwind.css'
 
 // is development mode
@@ -25,8 +26,16 @@ Vue.config.silent = !isDev
 // assign app name from env
 Vue.prototype.$appName = process.env.VUE_APP_NAME
 
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+// request XSRF-TOKEN
+validateXsrfToken()
+
+// attempt to re-authenticate if the auth token is still
+// initialize it before rendering to prevent flickering
+store.dispatch('auth/setUser', validateAuthUserToken())
+  .then(() => {
+    new Vue({
+      router,
+      store,
+      render: h => h(App)
+    }).$mount('#app')
+  })
