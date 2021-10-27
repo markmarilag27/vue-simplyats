@@ -40,10 +40,6 @@ export default {
     $route: 'fetchData'
   },
 
-  created () {
-    this.fetchData()
-  },
-
   methods: {
     ...mapMutations({
       setAuthUser: 'auth/SET_AUTH_USER'

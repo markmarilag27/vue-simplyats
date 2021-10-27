@@ -2,13 +2,13 @@
   <div class="relative">
     <nav
       ref="nav"
-      class="fixed top-0 left-0 right-0 px-4 py-4 md:px-8 flex flex-wrap justify-between items-center"
+      class="fixed bg-white top-0 left-0 right-0 px-4 py-4 md:px-8 flex flex-wrap justify-between items-center"
     >
       <slot name="header" />
     </nav>
     <!-- end page top navigation -->
     <div
-      class="px-4 md:px-8 content"
+      class="px-4 md:px-8 w-full block relative"
       :style="contentStyle"
     >
       <slot name="content" />
@@ -47,5 +47,6 @@ export default {
 <style scoped>
 .fixed {
   margin-left: var(--sidebar-width);
+  z-index: 1024;
 }
 </style>

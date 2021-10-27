@@ -68,5 +68,10 @@ export default {
 .content {
   margin-left: var(--sidebar-width);
   color: rgba(0, 0, 0, 0.65);
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
 }
 </style>
