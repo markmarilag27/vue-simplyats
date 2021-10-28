@@ -12,7 +12,7 @@
       <a
         v-if="applicant.cv"
         :href="applicant.cv.url"
-        target="_self"
+        target="_blank"
         class="text-blue-500"
         download
       >

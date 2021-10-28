@@ -2,14 +2,14 @@
   <PageLayout>
     <template #header>
       <div class="text-2xl font-semibold flex-grow">
-        Applicants
+        Jobs
       </div>
       <!-- end title -->
       <div class="flex-grow max-w-xs">
         <BaseInput
-          v-model="filter.name"
+          v-model="filter.title"
           type="text"
-          placeholder="Type in applicant name..."
+          placeholder="Type in job title..."
         />
         <!-- end search -->
       </div>
@@ -27,9 +27,8 @@
         <!-- end loading row -->
       </div>
       <!-- end loading -->
-      <!-- end -->
       <div v-else>
-        <ApplicantTable>
+        <JobTable>
           <tr v-if="list.length === 0">
             <td colspan="10">
               <NoDataFound class="text-center my-16" />
@@ -38,15 +37,14 @@
           </tr>
           <!-- end no data -->
           <template v-else>
-            <ApplicantTableRow
-              v-for="applicant in list"
-              :key="applicant.uuid"
-              :applicant="applicant"
-              @update-applicant="updateApplicant"
+            <JobTableRow
+              v-for="job in list"
+              :key="job.uuid"
+              :job="job"
             />
             <!-- end applicant table row -->
           </template>
-        </ApplicantTable>
+        </JobTable>
         <!-- end table list -->
         <div class="flex justify-end items-center my-8">
           <ButtonLoadMore
@@ -66,25 +64,25 @@
 
 <script>
 import debounce from 'lodash.debounce'
-import { getApplicants } from '@/api/applicant'
+import { getJobs } from '@/api/job'
 import PageLayout from '@/components/Layouts/PageLayout.vue'
 import BaseInput from '@/components/Base/BaseInput.vue'
-import ApplicantTable from './components/ApplicantTable.vue'
-import ApplicantTableRow from './components/ApplicantTableRow.vue'
 import ButtonLoadMore from '@/components/ButtonLoadMore.vue'
 import LoadingRow from '@/components/Loading/LoadingRow.vue'
+import JobTable from './components/JobTable.vue'
+import JobTableRow from './components/JobTableRow.vue'
 import NoDataFound from '@/components/NoDataFound.vue'
 
 export default {
-  name: 'Applicant',
+  name: 'Job',
 
   components: {
     PageLayout,
     BaseInput,
-    ApplicantTable,
-    ApplicantTableRow,
     ButtonLoadMore,
     LoadingRow,
+    JobTable,
+    JobTableRow,
     NoDataFound
   },
 
@@ -98,8 +96,8 @@ export default {
       filter: {
         page: 1,
         per_page: 15,
-        name: null,
-        status: 'all'
+        title: null,
+        sort: 'desc'
       }
     }
   },
@@ -117,7 +115,7 @@ export default {
   },
 
   watch: {
-    'filter.name' () {
+    'filter.title' () {
       this.loadMore(true)
     }
   },
@@ -131,7 +129,7 @@ export default {
       this.errors = {}
       this.isLoading = true
 
-      getApplicants(this.querySearchParams)
+      getJobs(this.querySearchParams)
         .then((response) => {
           const clonedList = [...this.list]
           let list = []
@@ -154,12 +152,7 @@ export default {
         this.filter.page++
       }
       this.fetchData(isSearch)
-    }, 500),
-    updateApplicant (event) {
-      const clonedList = [...this.list]
-      const newList = clonedList.filter(applicant => event.uuid !== applicant.uuid)
-      this.list = newList
-    }
+    }, 500)
   }
 }
 </script>
