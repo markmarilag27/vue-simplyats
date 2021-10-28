@@ -16,7 +16,7 @@
         class="text-blue-500"
         download
       >
-        Download
+        Browse
       </a>
       <span v-else>Not Available</span>
     </td>
@@ -29,17 +29,35 @@
       {{ applicant.created_at_from_now }}
     </td>
     <!-- end table data -->
-    <td class="text-right border-b my-3 py-3 align-middle">
-      actions
+    <td class="border-b my-3 py-3 align-middle">
+      <div class="flex justify-end gap-4">
+        <ApplicantActionModal
+          :uuid="applicant.uuid"
+          :approve="true"
+          @update-applicant-table-row="$emit('update-applicant', $event)"
+        />
+        <!-- end applicant action -->
+        <ApplicantActionModal
+          :uuid="applicant.uuid"
+          :approve="false"
+          @update-applicant-table-row="$emit('update-applicant', $event)"
+        />
+      <!-- end applicant action -->
+      </div>
     </td>
     <!-- end table data -->
   </tr>
 </template>
 
 <script>
+import ApplicantActionModal from './ApplicantActionModal.vue'
 
 export default {
   name: 'ApplicantTableRow',
+
+  components: {
+    ApplicantActionModal
+  },
 
   props: {
     applicant: {

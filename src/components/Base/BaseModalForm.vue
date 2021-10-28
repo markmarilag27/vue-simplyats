@@ -14,21 +14,24 @@
       :class="className"
       v-bind="$attrs"
     >
-      <header class="flex justify-between items-center">
+      <header class="flex flex-wrap justify-between items-center">
         <div
-          class="text-xl font-bold"
+          class="text-xl font-normal w-auto flex-grow"
           v-text="title"
         />
         <!-- end title -->
         <BaseButton
           @click="closeModal"
-          class="w-auto px-0 py-0 bg-transparent text-black"
+          class-name="w-auto px-0 py-0 bg-transparent text-black"
         >
           <SVGClose />
         </BaseButton>
       </header>
       <!-- end header -->
-      <main :class="[ withFooter ? 'py-4' : 'pt-4' ]">
+      <main
+        class="font-normal"
+        :class="[ withFooter ? 'py-4' : 'pt-4' ]"
+      >
         <slot name="modal-body" />
       </main>
       <!-- end body -->
@@ -39,7 +42,7 @@
         <BaseButton
           v-if="closeBtn"
           @click="closeModal"
-          class="w-auto py-2"
+          class-name="w-auto bg-gray-500 text-white px-8 py-2 rounded"
         >
           Close
         </BaseButton>

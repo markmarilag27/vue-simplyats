@@ -42,6 +42,7 @@
               v-for="applicant in list"
               :key="applicant.uuid"
               :applicant="applicant"
+              @update-applicant="updateApplicant"
             />
             <!-- end applicant table row -->
           </template>
@@ -153,7 +154,15 @@ export default {
         this.filter.page++
       }
       this.fetchData(isSearch)
-    }, 500)
+    }, 500),
+    updateApplicant (event) {
+      console.log('event:', event)
+      const clonedList = [...this.list]
+      console.log('cloned list:', clonedList)
+      const newList = clonedList.filter(applicant => event.uuid !== applicant.uuid)
+      console.log('new list:', newList)
+      this.list = newList
+    }
   }
 }
 </script>
