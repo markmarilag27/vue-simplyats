@@ -33,15 +33,30 @@
     </td>
     <!-- end table data -->
     <td class="text-left text-gray-500 border-b my-3 py-3 align-middle">
-      action
+      <div class="flex flex-wrap justify-end items-center">
+        <BaseButton
+          @click="routeToEditJob"
+          class-name="border-2 border-blue-400 bg-blue-400 font-bold py-2 px-6 rounded text-xs text-white"
+        >
+          Edit
+        </BaseButton>
+        <!-- end edit button -->
+      </div>
+      <!-- end wrapper -->
     </td>
     <!-- end table data -->
   </tr>
 </template>
 
 <script>
+import BaseButton from '@/components/Base/BaseButton.vue'
+
 export default {
   name: 'JobTableRow',
+
+  components: {
+    BaseButton
+  },
 
   props: {
     job: {
@@ -62,6 +77,17 @@ export default {
       }
 
       return 'text-red-400'
+    }
+  },
+
+  methods: {
+    routeToEditJob () {
+      this.$router.push({
+        name: 'jobs.edit',
+        params: {
+          uuid: this.job.uuid
+        }
+      })
     }
   }
 }

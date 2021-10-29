@@ -50,6 +50,16 @@ export default {
 
       state.list = newList
     },
+    UPDATE_JOB: (state, payload) => {
+      const cloneList = [...state.list]
+      const updatedList = cloneList.map(job => {
+        if (payload.uuid === job.uuid) {
+          return payload
+        }
+        return job
+      })
+      state.list = updatedList
+    },
     SET_FILTER: (state, payload) => (state.filter = payload),
     SET_ERRORS: (state, payload) => (state.errors = payload),
     SET_LOADING: (state, payload) => (state.isLoading = payload)
@@ -58,6 +68,7 @@ export default {
   // actions
   actions: {
     setJob: ({ commit }, payload) => (commit('SET_JOB', payload)),
+    updateJob: ({ commit }, payload) => (commit('UPDATE_JOB', payload)),
     setFilter: ({ commit }, payload) => (commit('SET_FILTER', payload)),
     setErrors: ({ commit }, payload) => (commit('SET_ERRORS', payload)),
     setLoading: ({ commit }, payload) => (commit('SET_LOADING', payload))

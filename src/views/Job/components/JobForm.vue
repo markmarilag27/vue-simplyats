@@ -147,7 +147,7 @@
           <span class="flex justify-center items-center">
             <SVGAnimateSpin v-if="isLoading" />
             <span :class="{ 'ml-3': isLoading }">
-              Create a new job
+              {{ form.uuid ? 'Update' : 'Create a new job' }}
             </span>
           </span>
         </BaseButton>
@@ -162,7 +162,7 @@
 
 <script>
 import cloneDeep from 'lodash.clonedeep'
-import { createJob } from '@/api/job'
+import { createJob, updateJob } from '@/api/job'
 import { mapActions } from 'vuex'
 import jobSelectListMixin from '@/mixins/job-select-list-mixin'
 import BaseInput from '@/components/Base/BaseInput.vue'
@@ -201,7 +201,7 @@ export default {
   },
 
   created () {
-    this.initForm()
+    this.init()
   },
 
   mounted () {
@@ -209,19 +209,38 @@ export default {
   },
 
   beforeDestroy () {
-    this.initForm()
+    this.init()
   },
 
   methods: {
     ...mapActions({
       pushNotification: 'ui/pushNotification',
-      setJob: 'job/setJob'
+      setJob: 'job/setJob',
+      updateJob: 'job/updateJob'
     }),
+    init () {
+      this.form = cloneDeep(this.formData)
+    },
     onSubmit () {
       this.errors = {}
       this.isLoading = true
 
-      createJob(this.form)
+      let response = null
+
+      if (this.form.uuid) {
+        response = updateJob(this.form.uuid, this.form)
+          .then(({ data }) => {
+            const message = {
+              type: 'success',
+              message: `The ${data.title} job has been updated!`
+            }
+            this.pushNotification(message)
+            this.$nextTick(() => {
+              this.updateJob(data)
+            })
+          })
+      } else {
+        response = createJob(this.form)
         .then(({ data }) => {
           const message = {
             type: 'success',
@@ -233,11 +252,9 @@ export default {
             this.$router.push({ name: 'jobs' })
           })
         })
-        .catch((error) => (this.errors = error.response?.data?.errors))
-        .finally(() => (this.isLoading = false))
-    },
-    initForm () {
-      this.form = cloneDeep(this.formData)
+      }
+
+      response.catch((error) => (this.errors = error.response?.data?.errors)).finally(() => (this.isLoading = false))
     }
   }
 }
