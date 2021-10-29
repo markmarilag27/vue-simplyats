@@ -33,7 +33,7 @@
     </td>
     <!-- end table data -->
     <td class="text-left text-gray-500 border-b my-3 py-3 align-middle">
-      <div class="flex flex-wrap justify-end items-center">
+      <div class="flex flex-wrap justify-end items-center gap-3">
         <BaseButton
           @click="routeToEditJob"
           class-name="border-2 border-blue-400 bg-blue-400 font-bold py-2 px-6 rounded text-xs text-white"
@@ -41,6 +41,8 @@
           Edit
         </BaseButton>
         <!-- end edit button -->
+        <JobDeleteModal :job="job" />
+        <!-- end job delete modal -->
       </div>
       <!-- end wrapper -->
     </td>
@@ -50,12 +52,14 @@
 
 <script>
 import BaseButton from '@/components/Base/BaseButton.vue'
+import JobDeleteModal from './JobDeleteModal.vue'
 
 export default {
   name: 'JobTableRow',
 
   components: {
-    BaseButton
+    BaseButton,
+    JobDeleteModal
   },
 
   props: {
