@@ -1,3 +1,5 @@
+import jobs from './jobs'
+
 export default [
   {
     path: '/',
@@ -9,7 +11,8 @@ export default [
     path: '/jobs',
     name: 'jobs',
     component: () => import(/* webpackChunkName: "job" */ '@/views/Job/index.vue'),
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
+    children: jobs
   },
   {
     path: '/login',

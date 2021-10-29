@@ -23,7 +23,7 @@
         </th>
         <!-- end table head -->
         <th class="text-sm text-left text-gray-500 border-b mb-3 pb-3">
-          Total Applicants
+          Applicants
         </th>
         <!-- end table head -->
         <th class="text-sm text-left text-gray-500 border-b mb-3 pb-3">

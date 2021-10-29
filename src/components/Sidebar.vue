@@ -28,8 +28,8 @@
       >
         <router-link
           :to="link.to"
-          exact
           class="block py-3 px-8"
+          :class="{ 'is-active': isActiveLink(link.name) }"
         >
           {{ link.text }}
         </router-link>
@@ -56,11 +56,13 @@ export default {
       links: [
         {
           text: 'Applicant',
-          to: '/'
+          to: '/',
+          name: 'home'
         },
         {
           text: 'Jobs',
-          to: '/jobs'
+          to: '/jobs',
+          name: 'jobs'
         },
       ]
     }
@@ -70,6 +72,12 @@ export default {
     ...mapState({
       user: state => state.auth.user
     })
+  },
+
+  methods: {
+    isActiveLink (name) {
+      return this.$route?.name?.includes(name)
+    }
   }
 }
 </script>
@@ -77,7 +85,8 @@ export default {
 <style scoped>
 .fixed {
   z-index: 1024;
-  max-width: 14.375rem;
+  width: 100%;
+  max-width: 17.5rem;
 }
 .menu > li > a {
   color: rgba(0, 0, 0, 0.45);
@@ -85,7 +94,7 @@ export default {
 .menu > li > a:hover {
   color: rgba(0, 0, 0, 0.65);
 }
-.menu > li > a.router-link-exact-active.router-link-active {
+.menu > li > a.is-active {
   color: rgba(0, 0, 0, 0.45);
   font-weight: 500;
   background-color: rgb(229, 231, 235);

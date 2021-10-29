@@ -3,8 +3,9 @@
     <input
       :value="value"
       @input="emitValue"
-      class="w-full py-3 px-3 border-gray-600 rounded border-2"
+      class="appearance-none w-full py-3 px-3 border-gray-600 rounded border-2"
       :class="[className, error ? 'border-red-500' : '']"
+      spellcheck="true"
       v-bind="$attrs"
     >
     <!-- end input -->

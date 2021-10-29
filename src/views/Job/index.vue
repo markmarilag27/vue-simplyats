@@ -1,17 +1,25 @@
 <template>
-  <PageLayout>
+  <PageLayout v-if="$route.name === 'jobs'">
     <template #header>
       <div class="text-2xl font-semibold flex-grow">
         Jobs
       </div>
       <!-- end title -->
-      <div class="flex-grow max-w-xs">
+      <div class="flex-grow flex xl:flex-nowrap flex-wrap gap-4 items-center max-w-xl">
         <BaseInput
-          v-model="filter.title"
+          v-model="search"
           type="text"
           placeholder="Type in job title..."
+          class="flex-auto"
         />
         <!-- end search -->
+        <BaseButton
+          @click="routeToCreateJob"
+          class-name="w-64 bg-gray-500 text-white py-3 px-4 rounded font-medium"
+        >
+          Create a new job
+        </BaseButton>
+        <!-- end create a new job button -->
       </div>
     </template>
     <!-- end top navigation -->
@@ -60,9 +68,13 @@
     </template>
     <!-- end content -->
   </PageLayout>
+  <!-- end index jobs page -->
+  <router-view v-else />
+  <!-- end child page -->
 </template>
 
 <script>
+import { mapState, mapGetters, mapActions } from 'vuex'
 import debounce from 'lodash.debounce'
 import { getJobs } from '@/api/job'
 import PageLayout from '@/components/Layouts/PageLayout.vue'
@@ -72,6 +84,7 @@ import LoadingRow from '@/components/Loading/LoadingRow.vue'
 import JobTable from './components/JobTable.vue'
 import JobTableRow from './components/JobTableRow.vue'
 import NoDataFound from '@/components/NoDataFound.vue'
+import BaseButton from '@/components/Base/BaseButton.vue'
 
 export default {
   name: 'Job',
@@ -83,34 +96,31 @@ export default {
     LoadingRow,
     JobTable,
     JobTableRow,
-    NoDataFound
-  },
-
-  data () {
-    return {
-      isLoading: false,
-      list: [],
-      links: {},
-      meta: {},
-      errors: {},
-      filter: {
-        page: 1,
-        per_page: 15,
-        title: null,
-        sort: 'desc'
-      }
-    }
+    NoDataFound,
+    BaseButton
   },
 
   computed: {
-    querySearchParams () {
-      const filter = Object.entries(this.filter).reduce((acc, [key, value]) => {
-        if (value) {
-          acc[key] = value
-        }
-        return acc
-      }, {})
-      return new URLSearchParams(filter)
+    ...mapState({
+      isLoading: state => state.job.isLoading,
+      list: state => state.job.list,
+      links: state => state.job.links,
+      meta: state => state.job.meta,
+      errors: state => state.job.errors,
+      filter: state => state.job.filter
+    }),
+    ...mapGetters({
+      querySearchParams: 'job/querySearchParams'
+    }),
+    search: {
+      get () {
+        return this.filter.title
+      },
+      set: debounce (function (value) {
+        const cloneFilter = {...this.filter}
+        const newFilter = {...cloneFilter, title: value}
+        this.setFilter(newFilter)
+      }, 500)
     }
   },
 
@@ -125,34 +135,41 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      setJob: 'job/setJob',
+      setFilter: 'job/setFilter',
+      setErrors: 'job/setErrors',
+      setLoading: 'job/setLoading',
+    }),
     fetchData (isSearch) {
-      this.errors = {}
-      this.isLoading = true
+      this.setErrors({})
+      this.setLoading(true)
 
       getJobs(this.querySearchParams)
         .then((response) => {
-          const clonedList = [...this.list]
-          let list = []
           if (isSearch) {
-            list = response.data
-          } else {
-            list = [...clonedList, ...response.data]
+            response = {...response, isSearch: true}
           }
-          this.list = list
-          this.links = response.links
-          this.meta = response.meta
+          this.setJob(response)
         })
         .catch((error) => (this.errors = error?.response?.data))
-        .finally(() => (this.isLoading = false))
+        .finally(() => (this.setLoading(false)))
     },
     loadMore: debounce(function (isSearch) {
       if (isSearch) {
-        this.filter.page = 1
+        const cloneFilter = {...this.filter}
+        const newFilter = {...cloneFilter, page: 1}
+        this.setFilter(newFilter)
       } else {
-        this.filter.page++
+        const cloneFilter = {...this.filter}
+        const newFilter = {...cloneFilter, page: (cloneFilter.page += 1)}
+        this.setFilter(newFilter)
       }
       this.fetchData(isSearch)
-    }, 500)
+    }, 500),
+    routeToCreateJob () {
+      this.$router.push({ name: 'jobs.create' })
+    }
   }
 }
 </script>
