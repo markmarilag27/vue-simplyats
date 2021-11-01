@@ -5,13 +5,7 @@ export default {
 
   // initial state
   state: {
-    notifications: [
-      {
-        id: 1,
-        status: 'success',
-        message: 'Foo'
-      }
-    ],
+    notifications: [],
     sidebarWidth: null
   },
 
