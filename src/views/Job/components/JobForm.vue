@@ -113,7 +113,7 @@
             for="status"
             class="font-medium text-gray-500"
           >
-            Job Experience
+            Job Status
           </label>
           <!-- end label -->
           <BaseSelect
