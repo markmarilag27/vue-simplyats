@@ -55,7 +55,7 @@ export default {
     return {
       links: [
         {
-          text: 'Applicant',
+          text: 'Applicants',
           to: '/',
           name: 'home'
         },
