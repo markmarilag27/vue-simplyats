@@ -99,7 +99,8 @@ export default {
         page: 1,
         per_page: 15,
         name: null,
-        status: 'all'
+        status: 'all',
+        sort: 'desc'
       }
     }
   },
