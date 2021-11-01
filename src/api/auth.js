@@ -18,7 +18,7 @@ export const postLogin = async (credentials) => {
     const response = await httpClient.post(`${ENDPOINT}/login`, credentials)
     return await response.data
   } catch (error) {
-    return Promise.all(error)
+    return Promise.reject(error)
   }
 }
 
